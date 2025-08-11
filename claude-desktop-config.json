@@ -1,0 +1,11 @@
+{
+  "mcpServers": {
+    "sms-activate": {
+      "command": "node",
+      "args": ["C:/mcp-servers/mcp-sms-activate/dist/index.js"],
+      "env": {
+        "SMS_ACTIVATE_API_KEY": "YOUR_API_KEY_HERE"
+      }
+    }
+  }
+}
