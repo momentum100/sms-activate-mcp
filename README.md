@@ -1,10 +1,15 @@
 # SMS-Activate MCP Server
 
-[Русская версия](README.ru.md)
+[English](#english) | [Русский](#russian)
+
+---
+
+<a name="english"></a>
+## English
 
 MCP (Model Context Protocol) server for integrating with [SMS-Activate](https://sms-activate.io/) service - a platform for receiving SMS verification codes and temporary email addresses.
 
-## Features
+### Features
 
 - 📱 **Phone Number Operations**: Request virtual numbers, check SMS codes, manage activations
 - 📧 **Email Activations**: Purchase temporary emails, check inbox, manage email sessions
@@ -12,28 +17,28 @@ MCP (Model Context Protocol) server for integrating with [SMS-Activate](https://
 - 🌍 **Service Information**: Get available countries, operators, services, and prices
 - 🔄 **Real-time Status**: Track activation status and retrieve verification codes
 
-## Prerequisites
+### Prerequisites
 
 - Node.js 18 or higher
 - npm or yarn
 - SMS-Activate API key (get it from [sms-activate.io](https://sms-activate.io/))
 
-## Installation
+### Installation
 
-### 1. Clone the repository
+#### 1. Clone the repository
 
 ```bash
 git clone https://github.com/momentum100/sms-activate-mcp.git
 cd sms-activate-mcp
 ```
 
-### 2. Install dependencies
+#### 2. Install dependencies
 
 ```bash
 npm install
 ```
 
-### 3. Configure environment
+#### 3. Configure environment
 
 Create a `.env` file in the project root:
 
@@ -42,23 +47,23 @@ SMS_ACTIVATE_API_KEY=your_api_key_here
 SMS_ACTIVATE_BASE_URL=https://api.sms-activate.ae
 ```
 
-### 4. Build the project
+#### 4. Build the project
 
 ```bash
 npm run build
 ```
 
-### 5. Test the server
+#### 5. Test the server
 
 ```bash
 npm start
 ```
 
-## Configuration for Claude Desktop
+### Configuration for Claude Desktop
 
 Add this configuration to your Claude Desktop settings:
 
-### Windows
+#### Windows
 Location: `%APPDATA%\Claude\claude_desktop_config.json`
 
 ```json
@@ -75,7 +80,7 @@ Location: `%APPDATA%\Claude\claude_desktop_config.json`
 }
 ```
 
-### macOS
+#### macOS
 Location: `~/Library/Application Support/Claude/claude_desktop_config.json`
 
 ```json
@@ -92,7 +97,7 @@ Location: `~/Library/Application Support/Claude/claude_desktop_config.json`
 }
 ```
 
-### Linux
+#### Linux
 Location: `~/.config/Claude/claude_desktop_config.json`
 
 ```json
@@ -109,119 +114,57 @@ Location: `~/.config/Claude/claude_desktop_config.json`
 }
 ```
 
-## Available Tools
+### Available Tools
 
-### Phone Number Operations
+#### Phone Number Operations
 
-#### `request_number`
-Request a virtual phone number for SMS verification.
+- **`request_number`** - Request a virtual phone number for SMS verification
+  - `service` (required): Service code or name (e.g., "tg" or "Telegram")
+  - `country` (optional): Country ID (0=Russia, 1=Ukraine, etc.)
+  - `operator` (optional): Mobile operator
+  - `forward` (optional): Enable forwarding (0 or 1)
+  - `ref` (optional): Referral code
 
-**Parameters:**
-- `service` (required): Service code or name (e.g., "tg" or "Telegram")
-- `country` (optional): Country ID (0=Russia, 1=Ukraine, etc.)
-- `operator` (optional): Mobile operator
-- `forward` (optional): Enable forwarding (0 or 1)
-- `ref` (optional): Referral code
+- **`get_status`** - Check activation status and retrieve SMS code
+  - `activationId` (required): The activation ID from request_number
 
-**Example:**
-```
-Request a Telegram number from Russia
-```
+- **`set_status`** - Change activation status
+  - `activationId` (required): The activation ID
+  - `status` (required): Status code (1=resend, 3=new code, 6=complete, 8=cancel)
 
-#### `get_status`
-Check activation status and retrieve SMS code.
+- **`get_active_activations`** - Get list of all active activations
 
-**Parameters:**
-- `activationId` (required): The activation ID from request_number
+- **`get_activation_history`** - View activation history
 
-#### `set_status`
-Change activation status.
+#### Email Operations
 
-**Parameters:**
-- `activationId` (required): The activation ID
-- `status` (required): Status code
-  - 1 = Report SMS sent (resend)
-  - 3 = Request another code
-  - 6 = Complete activation
-  - 8 = Cancel activation
+- **`purchase_email`** - Purchase a temporary email address
+  - `site` (required): Target website (e.g., "telegram.com")
+  - `mailDomain` (required): Email domain (e.g., "gmail.com")
 
-#### `get_active_activations`
-Get list of all active activations.
+- **`get_email_status`** - Check email activation status and inbox
+  - `emailId` (required): Email activation ID
 
-#### `get_activation_history`
-View activation history.
+- **`cancel_email`** - Cancel email activation
+  - `emailId` (required): Email activation ID
 
-### Email Operations
+- **`reorder_email`** - Reorder the same email activation
+  - `emailId` (required): Email activation ID
 
-#### `purchase_email`
-Purchase a temporary email address.
+- **`get_email_domains`** - Get available email domains for a website
+  - `site` (optional): Target website
 
-**Parameters:**
-- `site` (required): Target website (e.g., "telegram.com")
-- `mailDomain` (required): Email domain (e.g., "gmail.com")
+#### Information Tools
 
-#### `get_email_status`
-Check email activation status and inbox.
+- **`get_balance`** - Check account balance
+- **`get_numbers_status`** - Get available phone numbers count
+- **`get_countries`** - Get list of all available countries
+- **`get_services`** - Get list of all available services
+- **`get_operators`** - Get operators for a specific country
+- **`get_prices`** - Get service prices
+- **`get_top_countries`** - Get top countries for a specific service
 
-**Parameters:**
-- `emailId` (required): Email activation ID
-
-#### `cancel_email`
-Cancel email activation.
-
-**Parameters:**
-- `emailId` (required): Email activation ID
-
-#### `reorder_email`
-Reorder the same email activation.
-
-**Parameters:**
-- `emailId` (required): Email activation ID
-
-#### `get_email_domains`
-Get available email domains for a website.
-
-**Parameters:**
-- `site` (optional): Target website
-
-### Information Tools
-
-#### `get_balance`
-Check account balance.
-
-#### `get_numbers_status`
-Get available phone numbers count by service and country.
-
-**Parameters:**
-- `country` (optional): Country ID
-- `operator` (optional): Operator name
-
-#### `get_countries`
-Get list of all available countries.
-
-#### `get_services`
-Get list of all available services.
-
-#### `get_operators`
-Get operators for a specific country.
-
-**Parameters:**
-- `country` (required): Country ID
-
-#### `get_prices`
-Get service prices.
-
-**Parameters:**
-- `country` (optional): Country ID
-- `service` (optional): Service code
-
-#### `get_top_countries`
-Get top countries for a specific service.
-
-**Parameters:**
-- `service` (required): Service code
-
-## Common Service Codes
+### Common Service Codes
 
 | Code | Service |
 |------|---------|
@@ -235,7 +178,7 @@ Get top countries for a specific service.
 | `ub` | Uber |
 | `ot` | Any other |
 
-## Common Country IDs
+### Common Country IDs
 
 | ID | Country |
 |----|---------|
@@ -251,44 +194,247 @@ Get top countries for a specific service.
 | 16 | England |
 | 22 | India |
 
-## Usage Examples
-
-### Basic Workflow
-
-1. **Check balance**: "What's my SMS-Activate balance?"
-2. **Request number**: "Get me a Telegram number from Russia"
-3. **Check status**: "Check the status of activation 123456789"
-4. **Complete activation**: "Mark activation 123456789 as complete"
-
-### Email Workflow
-
-1. **Get domains**: "What email domains are available for telegram.com?"
-2. **Purchase email**: "Buy a gmail.com email for telegram.com"
-3. **Check inbox**: "Check email 123456 for new messages"
-
-## Development
-
-### Run in development mode
+### Development
 
 ```bash
+# Run in development mode
 npm run dev
+
+# Build the project
+npm run build
+
+# Start the server
+npm start
 ```
 
-### Build the project
+### Troubleshooting
+
+- **"SMS_ACTIVATE_API_KEY environment variable is required"** - Create `.env` file with your API key
+- **"BAD_KEY" or "ERROR_SQL"** - Verify API key and account balance
+- **Connection errors** - Check internet connection and API availability
+
+---
+
+<a name="russian"></a>
+## Русский
+
+MCP (Model Context Protocol) сервер для интеграции с сервисом [SMS-Activate](https://sms-activate.io/) - платформой для получения SMS кодов верификации и временных email адресов.
+
+### Возможности
+
+- 📱 **Операции с номерами**: Запрос виртуальных номеров, проверка SMS кодов, управление активациями
+- 📧 **Email активации**: Покупка временных email адресов, проверка входящих, управление сессиями
+- 💰 **Управление аккаунтом**: Проверка баланса, просмотр истории активаций
+- 🌍 **Информация о сервисах**: Получение доступных стран, операторов, сервисов и цен
+- 🔄 **Статус в реальном времени**: Отслеживание статуса активации и получение кодов верификации
+
+### Требования
+
+- Node.js 18 или выше
+- npm или yarn
+- API ключ SMS-Activate (получите на [sms-activate.io](https://sms-activate.io/))
+
+### Установка
+
+#### 1. Клонирование репозитория
+
+```bash
+git clone https://github.com/momentum100/sms-activate-mcp.git
+cd sms-activate-mcp
+```
+
+#### 2. Установка зависимостей
+
+```bash
+npm install
+```
+
+#### 3. Настройка окружения
+
+Создайте файл `.env` в корне проекта:
+
+```env
+SMS_ACTIVATE_API_KEY=ваш_api_ключ
+SMS_ACTIVATE_BASE_URL=https://api.sms-activate.ae
+```
+
+#### 4. Сборка проекта
 
 ```bash
 npm run build
 ```
 
-### Project Structure
+#### 5. Тестирование сервера
+
+```bash
+npm start
+```
+
+### Конфигурация для Claude Desktop
+
+Добавьте эту конфигурацию в настройки Claude Desktop:
+
+#### Windows
+Расположение: `%APPDATA%\Claude\claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "sms-activate": {
+      "command": "node",
+      "args": ["C:/путь/к/sms-activate-mcp/dist/index.js"],
+      "env": {
+        "SMS_ACTIVATE_API_KEY": "ваш_api_ключ"
+      }
+    }
+  }
+}
+```
+
+#### macOS
+Расположение: `~/Library/Application Support/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "sms-activate": {
+      "command": "node",
+      "args": ["/Users/username/путь/к/sms-activate-mcp/dist/index.js"],
+      "env": {
+        "SMS_ACTIVATE_API_KEY": "ваш_api_ключ"
+      }
+    }
+  }
+}
+```
+
+#### Linux
+Расположение: `~/.config/Claude/claude_desktop_config.json`
+
+```json
+{
+  "mcpServers": {
+    "sms-activate": {
+      "command": "node",
+      "args": ["/home/username/путь/к/sms-activate-mcp/dist/index.js"],
+      "env": {
+        "SMS_ACTIVATE_API_KEY": "ваш_api_ключ"
+      }
+    }
+  }
+}
+```
+
+### Доступные инструменты
+
+#### Операции с телефонными номерами
+
+- **`request_number`** - Запрос виртуального номера телефона для SMS верификации
+  - `service` (обязательный): Код или название сервиса (например, "tg" или "Telegram")
+  - `country` (опциональный): ID страны (0=Россия, 1=Украина и т.д.)
+  - `operator` (опциональный): Мобильный оператор
+  - `forward` (опциональный): Включить переадресацию (0 или 1)
+  - `ref` (опциональный): Реферальный код
+
+- **`get_status`** - Проверка статуса активации и получение SMS кода
+  - `activationId` (обязательный): ID активации из request_number
+
+- **`set_status`** - Изменение статуса активации
+  - `activationId` (обязательный): ID активации
+  - `status` (обязательный): Код статуса (1=переотправить, 3=новый код, 6=завершить, 8=отменить)
+
+- **`get_active_activations`** - Получить список всех активных активаций
+
+- **`get_activation_history`** - Просмотр истории активаций
+
+#### Операции с Email
+
+- **`purchase_email`** - Покупка временного email адреса
+  - `site` (обязательный): Целевой сайт (например, "telegram.com")
+  - `mailDomain` (обязательный): Email домен (например, "gmail.com")
+
+- **`get_email_status`** - Проверка статуса email активации и входящих сообщений
+  - `emailId` (обязательный): ID email активации
+
+- **`cancel_email`** - Отмена email активации
+  - `emailId` (обязательный): ID email активации
+
+- **`reorder_email`** - Повторный заказ той же email активации
+  - `emailId` (обязательный): ID email активации
+
+- **`get_email_domains`** - Получить доступные email домены для сайта
+  - `site` (опциональный): Целевой сайт
+
+#### Информационные инструменты
+
+- **`get_balance`** - Проверка баланса аккаунта
+- **`get_numbers_status`** - Получить количество доступных номеров
+- **`get_countries`** - Получить список всех доступных стран
+- **`get_services`** - Получить список всех доступных сервисов
+- **`get_operators`** - Получить операторов для конкретной страны
+- **`get_prices`** - Получить цены на сервисы
+- **`get_top_countries`** - Получить топ стран для конкретного сервиса
+
+### Основные коды сервисов
+
+| Код | Сервис |
+|------|---------|
+| `tg` | Telegram |
+| `wa` | WhatsApp |
+| `ig` | Instagram |
+| `fb` | Facebook |
+| `go` | Google |
+| `tw` | Twitter |
+| `vi` | Viber |
+| `ub` | Uber |
+| `ot` | Любой другой |
+
+### Основные ID стран
+
+| ID | Страна |
+|----|---------|
+| 0 | Россия |
+| 1 | Украина |
+| 2 | Казахстан |
+| 3 | Китай |
+| 4 | Филиппины |
+| 5 | Мьянма |
+| 6 | Индонезия |
+| 10 | Вьетнам |
+| 12 | США (Виртуальный) |
+| 16 | Англия |
+| 22 | Индия |
+
+### Разработка
+
+```bash
+# Запуск в режиме разработки
+npm run dev
+
+# Сборка проекта
+npm run build
+
+# Запуск сервера
+npm start
+```
+
+### Решение проблем
+
+- **"SMS_ACTIVATE_API_KEY environment variable is required"** - Создайте файл `.env` с вашим API ключом
+- **"BAD_KEY" или "ERROR_SQL"** - Проверьте API ключ и баланс аккаунта
+- **Ошибки подключения** - Проверьте интернет-соединение и доступность API
+
+---
+
+## Project Structure
 
 ```
 sms-activate-mcp/
 ├── src/
-│   ├── index.ts              # Main MCP server
-│   └── sms-activate-client.ts # SMS-Activate API client
-├── dist/                     # Compiled JavaScript (generated)
-├── docs/                     # API documentation
+│   ├── index.ts              # Main MCP server / Основной MCP сервер
+│   └── sms-activate-client.ts # SMS-Activate API client / Клиент API
+├── dist/                     # Compiled JavaScript / Скомпилированный код
+├── docs/                     # API documentation / Документация API
 │   ├── SMS-ACTIVATE.postman_collection.json
 │   ├── api-protocol-for-working-with-sms-activate.json
 │   └── services.json
@@ -298,36 +444,11 @@ sms-activate-mcp/
 └── README.md
 ```
 
-## Troubleshooting
-
-### "SMS_ACTIVATE_API_KEY environment variable is required"
-
-Make sure you've created a `.env` file with your API key or set it in the Claude Desktop configuration.
-
-### "BAD_KEY" or "ERROR_SQL" responses
-
-- Verify your API key is correct
-- Check your account balance
-- Ensure the API key has proper permissions
-
-### Connection errors
-
-- Check your internet connection
-- Verify the SMS-Activate API is accessible
-- Try changing `SMS_ACTIVATE_BASE_URL` in your `.env` file
-
-## Security
-
-- Never commit your `.env` file or expose your API key
-- Use environment variables for sensitive data
-- Regularly rotate your API keys
-- Monitor your account for unusual activity
-
-## Support
+## Support / Поддержка
 
 - **Issues**: [GitHub Issues](https://github.com/momentum100/sms-activate-mcp/issues)
-- **SMS-Activate Support**: [sms-activate.io/en/support](https://sms-activate.io/en/support)
-- **API Documentation**: [sms-activate.io/en/api2](https://sms-activate.io/en/api2)
+- **SMS-Activate Support**: [sms-activate.io/support](https://sms-activate.io/support)
+- **API Documentation**: [sms-activate.io/api2](https://sms-activate.io/api2)
 
 ## License
 
@@ -336,12 +457,6 @@ MIT License - see [LICENSE](LICENSE) file for details.
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-1. Fork the repository
-2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
-3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull Request
 
 ## Author
 
