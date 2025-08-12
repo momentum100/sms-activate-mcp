@@ -54,6 +54,11 @@ export class SMSActivateClient {
       const data = response.data;
       
       if (typeof data === 'string') {
+        // Special case for ACCESS_BALANCE - return as-is for getBalance to handle
+        if (data.startsWith('ACCESS_BALANCE')) {
+          return data;
+        }
+        
         if (data.startsWith('ACCESS_')) {
           const parts = data.split(':');
           return {
